@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import ProjectCard from './ProjectCard';
 import { Input } from '@/components/ui/input';
-import { Search, AlertCircle } from 'lucide-react';
+import { Search, AlertCircle, Plus, Filter } from 'lucide-react';
 import { 
   Select,
   SelectContent,
@@ -11,6 +11,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { ProjectForm } from './ProjectForm';
 
 // Sample data
 const mockProjects = [
@@ -64,7 +68,7 @@ const mockProjects = [
     id: '4',
     title: 'Insurance Claims Processing',
     description: 'Processing and validating insurance claims documents',
-    status: 'hold' as const,  // Changed from 'onhold' to 'hold'
+    status: 'hold' as const,
     progress: 25,
     deadline: '2023-11-30',
     client: 'SecureLife Insurance',
@@ -109,6 +113,8 @@ const mockProjects = [
 const ProjectList = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [showCreateDialog, setShowCreateDialog] = useState(false);
+  const { toast } = useToast();
   
   const filteredProjects = mockProjects.filter(project => {
     const matchesSearch = project.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
@@ -118,31 +124,49 @@ const ProjectList = () => {
     
     return matchesSearch && matchesStatus;
   });
+
+  const handleCreateProject = () => {
+    setShowCreateDialog(false);
+    toast({
+      title: "Project created",
+      description: "Your new project has been successfully created.",
+    });
+  };
   
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="relative flex-1">
+      <div className="flex flex-col md:flex-row gap-4 justify-between">
+        <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input 
             placeholder="Search projects..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9"
+            className="pl-9 bg-background/50 backdrop-blur-sm border-muted"
           />
         </div>
         
-        <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-[130px]">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Statuses</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="hold">On Hold</SelectItem>  {/* Changed from 'onhold' to 'hold' */}
-            <SelectItem value="completed">Completed</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex gap-3">
+          <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <SelectTrigger className="w-[140px] bg-background/50 backdrop-blur-sm border-muted">
+              <SelectValue placeholder="Filter by status" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Statuses</SelectItem>
+              <SelectItem value="active">Active</SelectItem>
+              <SelectItem value="hold">On Hold</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Button 
+            onClick={() => setShowCreateDialog(true)} 
+            className="gap-1 bg-primary/90 hover:bg-primary shadow-sm"
+          >
+            <Plus className="h-4 w-4" />
+            New Project
+          </Button>
+        </div>
       </div>
       
       {filteredProjects.length > 0 ? (
@@ -155,7 +179,7 @@ const ProjectList = () => {
           ))}
         </div>
       ) : (
-        <Card className="flex flex-col items-center justify-center p-8 text-center">
+        <Card className="flex flex-col items-center justify-center p-8 text-center backdrop-blur-sm bg-background/50 border-muted">
           <AlertCircle className="h-10 w-10 text-muted-foreground mb-4" />
           <h3 className="text-lg font-medium mb-2">No projects found</h3>
           <p className="text-muted-foreground">
@@ -163,6 +187,15 @@ const ProjectList = () => {
           </p>
         </Card>
       )}
+
+      <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Create New Project</DialogTitle>
+          </DialogHeader>
+          <ProjectForm onSubmit={handleCreateProject} />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

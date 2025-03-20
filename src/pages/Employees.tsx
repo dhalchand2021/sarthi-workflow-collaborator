@@ -3,20 +3,12 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/Navbar';
 import EmployeeList from '@/components/EmployeeList';
 import { Button } from '@/components/ui/button';
-import { PlusCircle, Filter, SortAsc } from 'lucide-react';
-import { 
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription
-} from '@/components/ui/dialog';
-import { EmployeeForm } from '@/components/EmployeeForm';
+import { PlusCircle, Filter, SortAsc, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Card } from '@/components/ui/card';
 
 const Employees = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const { toast } = useToast();
   
   useEffect(() => {
@@ -28,66 +20,31 @@ const Employees = () => {
     return () => clearTimeout(timer);
   }, []);
   
-  const handleCreateEmployee = () => {
-    setIsCreateDialogOpen(false);
-    toast({
-      title: "Employee added",
-      description: "New employee has been successfully added to the system.",
-    });
-  };
-  
   return (
-    <div className="min-h-screen bg-muted/30">
+    <div className="min-h-screen bg-gradient-to-br from-background to-background/90">
       <Navbar />
       
       <main className="pt-24 pb-16 px-4 md:px-8">
         <div className="max-w-screen-2xl mx-auto">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
             <div>
-              <h1 className="text-2xl font-semibold">Employee Management</h1>
+              <h1 className="text-2xl font-semibold bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">Employee Management</h1>
               <p className="text-muted-foreground mt-1">Manage all employees and their profiles</p>
-            </div>
-            
-            <div className="flex items-center gap-3">
-              <Button variant="outline" size="sm" className="gap-1">
-                <Filter className="h-4 w-4" />
-                Filter
-              </Button>
-              <Button variant="outline" size="sm" className="gap-1">
-                <SortAsc className="h-4 w-4" />
-                Sort
-              </Button>
-              <Button size="sm" className="gap-1" onClick={() => setIsCreateDialogOpen(true)}>
-                <PlusCircle className="h-4 w-4" />
-                Add Employee
-              </Button>
             </div>
           </div>
           
           {isLoading ? (
-            <div className="h-[600px] flex items-center justify-center">
+            <Card className="h-[600px] flex items-center justify-center bg-background/50 backdrop-blur-sm border-muted">
               <div className="flex flex-col items-center">
-                <div className="h-10 w-10 border-4 border-primary/30 border-t-primary rounded-full animate-spin" />
+                <Loader2 className="h-10 w-10 text-primary animate-spin" />
                 <p className="mt-4 text-muted-foreground">Loading employees...</p>
               </div>
-            </div>
+            </Card>
           ) : (
             <EmployeeList />
           )}
         </div>
       </main>
-      
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="sm:max-w-[550px]">
-          <DialogHeader>
-            <DialogTitle>Add New Employee</DialogTitle>
-            <DialogDescription>
-              Fill in the employee details to add them to the system
-            </DialogDescription>
-          </DialogHeader>
-          <EmployeeForm onSubmit={handleCreateEmployee} />
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };

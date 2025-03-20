@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
-import { Search, AlertCircle, MoreHorizontal, Mail, Phone, UserCircle, Calendar, Building } from 'lucide-react';
+import { Search, AlertCircle, MoreHorizontal, Mail, Phone, Calendar, Plus } from 'lucide-react';
 import { 
   Select,
   SelectContent,
@@ -137,13 +137,13 @@ const mockEmployees: Employee[] = [
 const getRoleBadge = (role: EmployeeRole) => {
   switch (role) {
     case 'agent':
-      return <Badge variant="outline" className="bg-blue-100 text-blue-800 border-0">Agent</Badge>;
+      return <Badge variant="outline" className="bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300 border-0">Agent</Badge>;
     case 'team-leader':
-      return <Badge variant="outline" className="bg-indigo-100 text-indigo-800 border-0">Team Leader</Badge>;
+      return <Badge variant="outline" className="bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300 border-0">Team Leader</Badge>;
     case 'manager':
-      return <Badge variant="outline" className="bg-purple-100 text-purple-800 border-0">Manager</Badge>;
+      return <Badge variant="outline" className="bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300 border-0">Manager</Badge>;
     case 'admin':
-      return <Badge variant="outline" className="bg-red-100 text-red-800 border-0">Admin</Badge>;
+      return <Badge variant="outline" className="bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300 border-0">Admin</Badge>;
     default:
       return null;
   }
@@ -152,11 +152,11 @@ const getRoleBadge = (role: EmployeeRole) => {
 const getStatusBadge = (status: EmployeeStatus) => {
   switch (status) {
     case 'active':
-      return <Badge variant="outline" className="bg-green-100 text-green-800 border-0">Active</Badge>;
+      return <Badge variant="outline" className="bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300 border-0">Active</Badge>;
     case 'inactive':
-      return <Badge variant="outline" className="bg-gray-100 text-gray-800 border-0">Inactive</Badge>;
+      return <Badge variant="outline" className="bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-300 border-0">Inactive</Badge>;
     case 'on-leave':
-      return <Badge variant="outline" className="bg-amber-100 text-amber-800 border-0">On Leave</Badge>;
+      return <Badge variant="outline" className="bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-300 border-0">On Leave</Badge>;
     default:
       return null;
   }
@@ -165,11 +165,11 @@ const getStatusBadge = (status: EmployeeStatus) => {
 const getTypeBadge = (type: EmployeeType) => {
   switch (type) {
     case 'voice':
-      return <Badge variant="outline" className="bg-cyan-100 text-cyan-800 border-0">Voice</Badge>;
+      return <Badge variant="outline" className="bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300 border-0">Voice</Badge>;
     case 'non-voice':
-      return <Badge variant="outline" className="bg-violet-100 text-violet-800 border-0">Non-Voice</Badge>;
+      return <Badge variant="outline" className="bg-violet-100 text-violet-800 dark:bg-violet-900/30 dark:text-violet-300 border-0">Non-Voice</Badge>;
     case 'both':
-      return <Badge variant="outline" className="bg-emerald-100 text-emerald-800 border-0">Voice & Non-Voice</Badge>;
+      return <Badge variant="outline" className="bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300 border-0">Voice & Non-Voice</Badge>;
     default:
       return null;
   }
@@ -181,6 +181,7 @@ const EmployeeList = () => {
   const [statusFilter, setStatusFilter] = useState('all');
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const { toast } = useToast();
   
   const handleEditEmployee = () => {
@@ -189,6 +190,15 @@ const EmployeeList = () => {
     toast({
       title: "Employee Updated",
       description: "Employee details have been updated successfully.",
+    });
+  };
+  
+  const handleCreateEmployee = () => {
+    setIsCreateDialogOpen(false);
+    
+    toast({
+      title: "Employee Created",
+      description: "New employee has been added successfully.",
     });
   };
   
@@ -204,20 +214,20 @@ const EmployeeList = () => {
   
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="relative flex-1">
+      <div className="flex flex-col md:flex-row gap-4 justify-between">
+        <div className="relative flex-1 max-w-md">
           <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
           <Input 
             placeholder="Search employees..." 
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-9"
+            className="pl-9 bg-background/50 backdrop-blur-sm border-muted"
           />
         </div>
         
-        <div className="flex gap-2">
+        <div className="flex gap-3 flex-wrap">
           <Select value={roleFilter} onValueChange={setRoleFilter}>
-            <SelectTrigger className="w-[130px]">
+            <SelectTrigger className="w-[130px] bg-background/50 backdrop-blur-sm border-muted">
               <SelectValue placeholder="Filter by role" />
             </SelectTrigger>
             <SelectContent>
@@ -230,7 +240,7 @@ const EmployeeList = () => {
           </Select>
           
           <Select value={statusFilter} onValueChange={setStatusFilter}>
-            <SelectTrigger className="w-[130px]">
+            <SelectTrigger className="w-[130px] bg-background/50 backdrop-blur-sm border-muted">
               <SelectValue placeholder="Filter by status" />
             </SelectTrigger>
             <SelectContent>
@@ -240,19 +250,27 @@ const EmployeeList = () => {
               <SelectItem value="on-leave">On Leave</SelectItem>
             </SelectContent>
           </Select>
+          
+          <Button 
+            className="gap-1 bg-primary/90 hover:bg-primary shadow-sm"
+            onClick={() => setIsCreateDialogOpen(true)}
+          >
+            <Plus className="h-4 w-4" />
+            Add Employee
+          </Button>
         </div>
       </div>
       
       {filteredEmployees.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {filteredEmployees.map(employee => (
-            <Card key={employee.id} className="overflow-hidden">
+            <Card key={employee.id} className="overflow-hidden hover:shadow-md transition-all duration-300 bg-background/80 backdrop-blur-sm border-muted/80">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex items-center gap-3">
-                    <Avatar className="h-10 w-10">
+                    <Avatar className="h-10 w-10 border border-primary/20">
                       <AvatarImage src={employee.avatar} alt={employee.name} />
-                      <AvatarFallback>{employee.name.charAt(0)}</AvatarFallback>
+                      <AvatarFallback className="bg-primary/10 text-primary">{employee.name.charAt(0)}</AvatarFallback>
                     </Avatar>
                     <div>
                       <h3 className="font-medium">{employee.name}</h3>
@@ -293,15 +311,15 @@ const EmployeeList = () => {
                 
                 <div className="space-y-2 text-sm">
                   <div className="flex items-center text-muted-foreground">
-                    <Mail className="h-3.5 w-3.5 mr-2" />
+                    <Mail className="h-3.5 w-3.5 mr-2 text-primary/70" />
                     <span>{employee.email}</span>
                   </div>
                   <div className="flex items-center text-muted-foreground">
-                    <Phone className="h-3.5 w-3.5 mr-2" />
+                    <Phone className="h-3.5 w-3.5 mr-2 text-primary/70" />
                     <span>{employee.phone}</span>
                   </div>
                   <div className="flex items-center text-muted-foreground">
-                    <Calendar className="h-3.5 w-3.5 mr-2" />
+                    <Calendar className="h-3.5 w-3.5 mr-2 text-primary/70" />
                     <span>Joined: {new Date(employee.joinDate).toLocaleDateString()}</span>
                   </div>
                 </div>
@@ -310,7 +328,7 @@ const EmployeeList = () => {
           ))}
         </div>
       ) : (
-        <Card className="flex flex-col items-center justify-center p-8 text-center">
+        <Card className="flex flex-col items-center justify-center p-8 text-center backdrop-blur-sm bg-background/50 border-muted">
           <AlertCircle className="h-10 w-10 text-muted-foreground mb-4" />
           <h3 className="text-lg font-medium mb-2">No employees found</h3>
           <p className="text-muted-foreground">
@@ -319,6 +337,7 @@ const EmployeeList = () => {
         </Card>
       )}
       
+      {/* Edit Employee Dialog */}
       <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
         <DialogContent className="sm:max-w-[550px]">
           <DialogHeader>
@@ -328,6 +347,19 @@ const EmployeeList = () => {
             </DialogDescription>
           </DialogHeader>
           {selectedEmployee && <EmployeeForm employee={selectedEmployee} onSubmit={handleEditEmployee} />}
+        </DialogContent>
+      </Dialog>
+      
+      {/* Create Employee Dialog */}
+      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
+        <DialogContent className="sm:max-w-[550px]">
+          <DialogHeader>
+            <DialogTitle>Add New Employee</DialogTitle>
+            <DialogDescription>
+              Fill in the details to add a new employee
+            </DialogDescription>
+          </DialogHeader>
+          <EmployeeForm onSubmit={handleCreateEmployee} />
         </DialogContent>
       </Dialog>
     </div>
