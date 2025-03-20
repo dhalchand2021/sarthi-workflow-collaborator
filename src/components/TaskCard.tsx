@@ -153,12 +153,10 @@ const TaskCard = ({
           <div className="flex items-center">
             <Calendar className="h-3.5 w-3.5 mr-1.5 text-muted-foreground" />
             <span className={cn(
-              isOverdue && status !== 'completed' 
-                ? "text-destructive font-medium" 
-                : "text-muted-foreground"
+              isOverdue ? "text-destructive font-medium" : "text-muted-foreground"
             )}>
               {formattedDate}
-              {isOverdue && status !== 'completed' && " (Overdue)"}
+              {isOverdue && " (Overdue)"}
             </span>
           </div>
           
