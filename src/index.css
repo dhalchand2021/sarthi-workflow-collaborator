@@ -45,6 +45,16 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Additional colors */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 0%;
+    
+    --info: 200 98% 39%;
+    --info-foreground: 0 0% 100%;
   }
 
   .dark {
@@ -84,6 +94,16 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+    
+    /* Additional colors for dark mode */
+    --success: 142 70% 45%;
+    --success-foreground: 0 0% 100%;
+    
+    --warning: 38 95% 60%;
+    --warning-foreground: 0 0% 0%;
+    
+    --info: 200 90% 50%;
+    --info-foreground: 0 0% 100%;
   }
 }
 
@@ -170,6 +190,47 @@
   .text-gradient {
     @apply bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent;
   }
+  
+  /* New utility classes */
+  .frosted-glass {
+    @apply bg-white/10 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10;
+  }
+  
+  .glass-card {
+    @apply bg-white/80 dark:bg-black/40 backdrop-blur-md border border-white/20 dark:border-gray-800/60 shadow-glass;
+  }
+  
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-card-hover;
+  }
+  
+  .animated-border {
+    @apply relative before:absolute before:inset-0 before:rounded-lg before:p-[1px] before:bg-gradient-to-r before:from-primary/50 before:via-primary/10 before:to-primary/50 before:animate-gradient-shift;
+  }
+  
+  .glow-effect {
+    @apply relative after:absolute after:inset-0 after:rounded-md after:shadow-glow after:opacity-0 after:transition-opacity hover:after:opacity-100;
+  }
+  
+  .animated-gradient-text {
+    @apply bg-gradient-to-r from-primary via-info to-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-gradient-shift;
+  }
+  
+  .scale-on-hover {
+    @apply transition-transform duration-300 hover:scale-105;
+  }
+  
+  .ripple-bg {
+    @apply relative overflow-hidden before:absolute before:inset-0 before:bg-primary/10 before:transform before:scale-0 before:opacity-0 before:rounded-full before:origin-center hover:before:scale-150 hover:before:opacity-100 before:transition-all before:duration-500;
+  }
+  
+  .subtle-border {
+    @apply border border-border/50 dark:border-border/30;
+  }
+  
+  .card-grid-bg {
+    @apply bg-grid-pattern bg-[size:20px_20px];
+  }
 }
 
 /* Page transition animations */
@@ -204,4 +265,43 @@
 
 .animate-float {
   animation: float 3s ease-in-out infinite;
+}
+
+/* Modern Loading Animation */
+.dots-loader {
+  display: flex;
+  gap: 0.3rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.dots-loader span {
+  width: 0.3rem;
+  height: 0.3rem;
+  border-radius: 50%;
+  background-color: currentColor;
+  animation: dots-loader 1.5s infinite ease-in-out;
+}
+
+.dots-loader span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.dots-loader span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.dots-loader span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes dots-loader {
+  0%, 80%, 100% { 
+    opacity: 0;
+    transform: scale(0);
+  }
+  40% { 
+    opacity: 1;
+    transform: scale(1);
+  }
 }
