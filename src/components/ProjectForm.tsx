@@ -35,7 +35,7 @@ const projectFormSchema = z.object({
   title: z.string().min(2, 'Title is required').max(100),
   description: z.string().max(500).optional(),
   client: z.string().min(1, 'Client name is required'),
-  status: z.enum(['active', 'onhold', 'completed']),
+  status: z.enum(['active', 'hold', 'completed']),  // Changed from 'onhold' to 'hold'
   deadline: z.date({
     required_error: 'Deadline is required',
   }),
@@ -134,7 +134,7 @@ export function ProjectForm({ defaultValues, onSubmit }: ProjectFormProps) {
                   </FormControl>
                   <SelectContent>
                     <SelectItem value="active">Active</SelectItem>
-                    <SelectItem value="onhold">On Hold</SelectItem>
+                    <SelectItem value="hold">On Hold</SelectItem>  {/* Changed from 'onhold' to 'hold' */}
                     <SelectItem value="completed">Completed</SelectItem>
                   </SelectContent>
                 </Select>

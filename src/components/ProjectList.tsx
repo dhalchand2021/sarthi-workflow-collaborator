@@ -64,7 +64,7 @@ const mockProjects = [
     id: '4',
     title: 'Insurance Claims Processing',
     description: 'Processing and validating insurance claims documents',
-    status: 'onhold' as const,
+    status: 'hold' as const,  // Changed from 'onhold' to 'hold'
     progress: 25,
     deadline: '2023-11-30',
     client: 'SecureLife Insurance',
@@ -139,7 +139,7 @@ const ProjectList = () => {
           <SelectContent>
             <SelectItem value="all">All Statuses</SelectItem>
             <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="onhold">On Hold</SelectItem>
+            <SelectItem value="hold">On Hold</SelectItem>  {/* Changed from 'onhold' to 'hold' */}
             <SelectItem value="completed">Completed</SelectItem>
           </SelectContent>
         </Select>
